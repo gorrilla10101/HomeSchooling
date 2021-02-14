@@ -1,4 +1,17 @@
+/* /Math/FastMath/AdditionFastMath.razor.rz.scp.css */
+.answer[b-dc65iiobwv]  .valid {
+    outline: 1px solid green;
+}
 /* /Pages/Addition.razor.rz.scp.css */
+.Add[b-94i2qn15ro]::before {
+    content: "+";
+}
+.incorrect[b-94i2qn15ro] {
+    outline: red solid 4px;
+}
+.correct[b-94i2qn15ro] {
+    outline: green solid 4px;
+}
 .Add[b-94i2qn15ro]::before {
     content: "+";
 }
@@ -135,4 +148,9 @@
         /* Never collapse the sidebar for wide screens */
         display: block;
     }
+}
+/* /Shared/UiTimer.razor.rz.scp.css */
+.timer[b-q1v4mehu6u] {
+    display: flex;
+    height: 100vh;
 }
