@@ -1,0 +1,3 @@
+.answer ::deep .valid {
+    outline: 1px solid green;
+}

@@ -1,73 +1,23 @@
 @page "/addition/fastmath"
+@using Homework.Math.FastMath
+<UiTimer>
+    <AdditionFastMath></AdditionFastMath>
+</UiTimer>
 
-<div class="problem">
-    <div class="top">@Top</div>
-    <div class="bottom @Sign">@Bottom</div>
-    <input type="number" class="answer" @oninput="KeyPressed" value="@Answer" />
-</div>
-@code {
-    private int Top { get; set; }
-    private int Bottom { get; set; }
-    private string Sign { get; set; } = "Add";
-    private string IsCorrect { get; set; }
-    private int? Answer;
+
+@code
+{
+    private int TopNumber { get; set; }
+    private int BottomNumber { get; set; }
+    private int? Answer { get; set; }
     private Random Random { get; } = new Random();
-    protected override void OnInitialized()
-    {
-        NextQuestion();
-    }
-
     private void NextQuestion()
     {
-        Answer = null;
-        Top = Random.Next(0, 11);
-        Bottom = Random.Next(0, 11);
-        if (Bottom > Top)
-        {
-            var temp = Bottom;
-            Bottom = Top;
-            Top = temp;
-        }
+        TopNumber = Random.Next(0, 11);
+        BottomNumber = Random.Next(0, 11);
     }
-
-    private void KeyPressed(ChangeEventArgs e)
+    private void HandleValidSubmit()
     {
-        if (int.TryParse(e.Value.ToString(), out int answer))
-        {
-            Answer = answer;
-        }
 
-        if (Validate())
-        {
-            NextQuestion();
-        }
-    }
-    private bool Validate()
-    {
-        switch (Sign)
-        {
-            case "Add":
-                {
-                    return Top + Bottom == Answer;
-                }
-            case "Subtract":
-                {
-                    return Top - Bottom == Answer;
-
-                }
-            case "Multiply":
-                {
-                    return Top * Bottom == Answer;
-                }
-            case "Divide":
-                {
-                    return Top / Bottom == Answer;
-                }
-            default:
-                {
-                    throw new ApplicationException("Invalid Sign");
-                }
-
-        }
     }
 }

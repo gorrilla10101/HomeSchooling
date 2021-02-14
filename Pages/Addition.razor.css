@@ -1,3 +1,12 @@
 .Add::before {
     content: "+";
 }
+.incorrect {
+    outline: red solid 4px;
+}
+.correct {
+    outline: green solid 4px;
+}
+.Add::before {
+    content: "+";
+}

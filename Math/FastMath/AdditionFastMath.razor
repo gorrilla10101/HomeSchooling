@@ -1,0 +1,78 @@
+<EditForm EditContext="EditContext" OnValidSubmit="HandleValidSubmit">
+    <div>
+        <div>@TopNumber</div>
+        <div>@BottomNumber</div>
+        <div class="answer">
+            <InputNumber @bind-Value="Answer" @oninput="InputChanged"></InputNumber>
+        </div>
+    </div>
+    <button type="submit">Submit</button>
+</EditForm>
+
+@code
+{
+    protected int TopNumber { get; set; }
+    protected int BottomNumber { get; set; }
+    [Required]
+    protected int? Answer { get; set; }
+    protected Random Random { get; } = new Random();
+
+    [Parameter]
+    public int Minimum { get; set; } = 0;
+    [Parameter]
+    public int Maximum { get; set; } = 10;
+    private EditContext EditContext { get; set; }
+    private ValidationMessageStore MessageStore { get; set; }
+
+    protected override void OnInitialized()
+    {
+        EditContext = new EditContext(this);
+        EditContext.OnValidationRequested += ValidationRequested;
+        MessageStore = new ValidationMessageStore(EditContext);
+        NextQuestion();
+    }
+    protected void InputChanged(ChangeEventArgs e)
+    {
+        Answer = null;
+        if(int.TryParse(e.Value?.ToString(), out var answer))
+        {
+            Answer = answer;
+        }
+        Validate();
+    }
+    private void ValidationRequested(object secnder, ValidationRequestedEventArgs e)
+    {
+        ValidateProblem();
+    }
+
+    private void ValidateProblem()
+    {
+        MessageStore.Clear();
+        if (Answer != (TopNumber + BottomNumber))
+        {
+            var fieldIdentifier = new FieldIdentifier(this, nameof(Answer));
+            MessageStore.Add(fieldIdentifier, "Incorrect Answer");
+            EditContext.NotifyValidationStateChanged();
+            StateHasChanged();
+        }
+    }
+    private void NextQuestion()
+    {
+        TopNumber = GetNextRandom();
+        BottomNumber = GetNextRandom();
+        Answer = null;
+        Validate();
+    }
+    private void Validate()
+    {
+        EditContext.Validate();
+    }
+    private int GetNextRandom()
+    {
+        return Random.Next(Minimum, Maximum);
+    }
+    private void HandleValidSubmit()
+    {
+        NextQuestion();
+    }
+}

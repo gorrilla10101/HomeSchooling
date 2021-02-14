@@ -1,0 +1,48 @@
+@using System.Threading;
+<div class="timer" style="@BackgroundGradient">
+    @ChildContent
+</div>
+
+@code
+{
+    private Timer Timer { get; set; }
+    [Parameter]
+    public int TimeInMilliSeconds { get; set; } = 60000;
+    [Parameter]
+    public int StepInMilliSeconds { get; set; } = 10;
+    private int CurrentStep { get; set; }
+    private int Percentage { get; set; }
+    private string GradientTemplate { get; } = "background:linear-gradient(to top, red {0}%, transparent 0);";
+    private string BackgroundGradient { get; set; } = "background:linear-gradient(to top, red 0%, transparent 0);";
+    [Parameter]
+    public RenderFragment ChildContent { get; set; }
+
+    protected override void OnInitialized()
+    {
+        Timer = new Timer(UpdateUi, null, StepInMilliSeconds, StepInMilliSeconds);
+    }
+    protected override void OnParametersSet()
+    {
+        SetPercentage();
+    }
+
+    private void UpdateUi(object state)
+    {
+        CurrentStep++;
+        SetPercentage();
+        Console.WriteLine(CurrentStep);
+        var gradient = string.Format("background:linear-gradient(to top, red {0}%, transparent 0);", Percentage);
+        BackgroundGradient = gradient;
+        Console.WriteLine(gradient);
+        StateHasChanged();
+    }
+    private void SetPercentage()
+    {
+        var elapsed = (CurrentStep * StepInMilliSeconds);
+        var percentTime = elapsed / TimeInMilliSeconds;
+        var percentage = ((decimal)elapsed / TimeInMilliSeconds);
+        percentage = percentage * 100;
+        Percentage = (int)Math.Ceiling(percentage);
+    }
+
+}
